@@ -1,0 +1,82 @@
+\documentclass{article}
+
+\usepackage[italian]{babel}     %testi autogenerati italiano
+\usepackage{minted}             %per codice vhdl bello
+\usepackage{tikz}               %per disegno fsm
+\usetikzlibrary{automata, positioning, arrows}
+\usepackage{circuitikz}         %per disegno componente
+\usepackage{graphicx}           %per importare immagini
+\usepackage{geometry}           %per gestire margini e spostamenti
+\geometry {
+    top=20mm,
+    bmargin=20mm,
+}
+\usepackage{array}              %per colonne di width fissata
+\usepackage{subcaption}         %tabelle divise
+\usepackage{hyperref}           %links
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+%\usepackage[bottom]{footmisc}   %footnotes fissate a piè pagina
+\usepackage{booktabs}           %per tabitem in tabular
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\renewcommand*{\thefootnote}{[\arabic{footnote}]}
+
+\begin{document}
+
+\setlength\parindent{0pt} %noindent automatico
+\setlength\parskip{1em}
+
+\begin{titlepage}
+    \centering
+    \hrule
+
+    \vspace{0,5cm}
+    {
+        \normalsize Politecnico di Milano\\
+        Dipartimento di Elettronica, Informazione e Bioingegneria
+    }
+
+    \vspace{5cm}
+    {\Huge \textbf{Progetto di Reti Logiche\\
+            2021/22}\\}
+
+    \vspace{0,5cm}
+    \large {Prof. Palermo Gianluca}
+
+    \vspace{5cm}
+    {
+        \large
+        \begin{tabular}{c c}
+            Dario Simoni \\
+            (Codice Persona: 10697990, Matricola: 932957) \\
+        \end{tabular}
+
+    }
+
+    \vspace{6.5cm}
+
+
+    \hrule
+
+\end{titlepage}
+
+\pagebreak
+
+\tableofcontents
+
+\pagebreak
+
+\section{Requisiti di progetto} %1
+\subsection{Descrizione del problema} %1.1
+Si vuole realizzare un modulo HW (descritto in VHDL) che si interfacci con una memoria e che
+ricevendo in ingresso un flusso continuo X da 1 bit restituisca un nuovo flusso continuo Y da 1 bit.
+\par
+Il flusso continuo X è generato da una seguenza continua di parole serializzate in base alla specifica, mentre il flusso continuo Y restituisce il doppio dei bit rispetto al flusso X.
+\vspace
+
+\clearpage
+
+\end{document}
