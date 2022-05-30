@@ -90,163 +90,163 @@ begin
             end if;
              
           when WAIT_START =>
-              state <= READ_NUMBER_OF_WORD;
+            state <= READ_NUMBER_OF_WORD;
              
           when READ_NUMBER_OF_WORD =>
-              to_be_processed <= to_integer(unsigned(i_data));
-              state <= WAIT_READ_NUMBER_OF_WORD;
+            to_be_processed <= to_integer(unsigned(i_data));
+            state <= WAIT_READ_NUMBER_OF_WORD;
               
           when WAIT_READ_NUMBER_OF_WORD =>
-              state <= PREPARE_BIT_READ;
+            state <= PREPARE_BIT_READ;
            
           when PREPARE_BIT_READ =>
-              o_we <= '0';
-              o_address <= ram_pos;
-              ram_pos <= std_logic_vector(unsigned(ram_pos)+1);
-              state <= WAIT_PREPARE_BIT_READ;
+            o_we <= '0';
+            o_address <= ram_pos;
+            ram_pos <= std_logic_vector(unsigned(ram_pos)+1);
+            state <= WAIT_PREPARE_BIT_READ;
            
           when WAIT_PREPARE_BIT_READ =>
-              state <= READ_BIT;
+            state <= READ_BIT;
            
           when READ_BIT =>
-              o_en <= '1';
-              if (std_logic_vector(to_unsigned(to_be_processed, 8)) = std_logic_vector(to_unsigned(words_processed, 8))) then
-                state <= DONE;
-              else --count ora fa 0 2 4 6 8 10 .. 16 0 ma non va bene per i_data fixare
-                if not (count = 8) then
-                  if fsm_00 then
-                      if i_data(7-count) ='0' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '0';
-                              word1(6-counter) <= '0';
-                          else
-                              word2(15-counter) <= '0';
-                              word2(14-counter) <= '0';
-                          end if;
-                      elsif i_data(7-count) = '1' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '1';
-                              word1(6-counter) <= '1';
-                          else
-                              word2(15-counter) <= '1';
-                              word2(14-counter) <= '1';
-                          end if;
-                          fsm_10 <= true;
-                          fsm_00 <= false;
-                      end if;
-                  elsif fsm_01 then
-                      if i_data(7-count) ='0' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '1';
-                              word1(6-counter) <= '1';
-                          else
-                              word2(15-counter) <= '1';
-                              word2(14-counter) <= '1';
-                          end if;
-                          fsm_00 <= true;
-                          fsm_01 <= false;
-                      elsif i_data(7-count) = '1' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '0';
-                              word1(6-counter) <= '0';
-                          else
-                              word2(15-counter) <= '0';
-                              word2(14-counter) <= '0';
-                          end if;
-                          fsm_10 <= true;
-                          fsm_01 <= false;
-                      end if;
-                  elsif fsm_10 then
-                      if i_data(7-count) ='0' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '0';
-                              word1(6-counter) <= '1';
-                          else
-                              word2(15-counter) <= '0';
-                              word2(14-counter) <= '1';
-                          end if;
-                          fsm_01 <= true;
-                          fsm_10 <= false;
-                      elsif i_data(7-count) = '1' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '1';
-                              word1(6-counter) <= '0';
-                          else
-                              word2(15-counter) <= '1';
-                              word2(14-counter) <= '0';
-                          end if;
-                          fsm_11 <= true;
-                          fsm_10 <= false;
-                      end if;
-                  elsif fsm_11 then
-                      if i_data(7-count) ='0' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '1';
-                              word1(6-counter) <= '0';
-                          else
-                              word2(15-counter) <= '1';
-                              word2(14-counter) <= '0';
-                          end if;
-                          fsm_01 <= true;
-                          fsm_11 <= false;
-                      elsif i_data(7-count) = '1' then
-                          if (counter < 8) then
-                              word1(7-counter) <= '0';
-                              word1(6-counter) <= '1';
-                          else
-                              word2(15-counter) <= '0';
-                              word2(14-counter) <= '1';
-                          end if;
-                      end if;
+            o_en <= '1';
+            if (std_logic_vector(to_unsigned(to_be_processed, 8)) = std_logic_vector(to_unsigned(words_processed, 8))) then
+              state <= DONE;
+            else
+              if not (count = 8) then
+                if fsm_00 then
+                  if i_data(7-count) ='0' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '0';
+                      word1(6-counter) <= '0';
+                    else
+                      word2(15-counter) <= '0';
+                      word2(14-counter) <= '0';
+                    end if;
+                  elsif i_data(7-count) = '1' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '1';
+                      word1(6-counter) <= '1';
+                    else
+                      word2(15-counter) <= '1';
+                      word2(14-counter) <= '1';
+                    end if;
+                    fsm_10 <= true;
+                    fsm_00 <= false;
                   end if;
-                  count <= count+1;
-                  counter <= counter+2;
-                  state <= WAIT_READ_BIT;
-                else
-                  count <= 0;
-                  counter <= 0;
-                  state <= WRITE_WORD_ONE;
+                elsif fsm_01 then
+                  if i_data(7-count) ='0' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '1';
+                      word1(6-counter) <= '1';
+                    else
+                      word2(15-counter) <= '1';
+                      word2(14-counter) <= '1';
+                    end if;
+                    fsm_00 <= true;
+                    fsm_01 <= false;
+                  elsif i_data(7-count) = '1' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '0';
+                      word1(6-counter) <= '0';
+                    else
+                      word2(15-counter) <= '0';
+                      word2(14-counter) <= '0';
+                    end if;
+                    fsm_10 <= true;
+                    fsm_01 <= false;
+                  end if;
+                elsif fsm_10 then
+                  if i_data(7-count) ='0' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '0';
+                      word1(6-counter) <= '1';
+                    else
+                      word2(15-counter) <= '0';
+                      word2(14-counter) <= '1';
+                    end if;
+                    fsm_01 <= true;
+                    fsm_10 <= false;
+                  elsif i_data(7-count) = '1' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '1';
+                      word1(6-counter) <= '0';
+                    else
+                      word2(15-counter) <= '1';
+                      word2(14-counter) <= '0';
+                    end if;
+                    fsm_11 <= true;
+                    fsm_10 <= false;
+                  end if;
+                elsif fsm_11 then
+                  if i_data(7-count) ='0' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '1';
+                      word1(6-counter) <= '0';
+                    else
+                      word2(15-counter) <= '1';
+                      word2(14-counter) <= '0';
+                    end if;
+                    fsm_01 <= true;
+                    fsm_11 <= false;
+                  elsif i_data(7-count) = '1' then
+                    if (counter < 8) then
+                      word1(7-counter) <= '0';
+                      word1(6-counter) <= '1';
+                    else
+                      word2(15-counter) <= '0';
+                      word2(14-counter) <= '1';
+                    end if;
+                  end if;
                 end if;
+                count <= count+1;
+                counter <= counter+2;
+                state <= WAIT_READ_BIT;
+              else
+                count <= 0;
+                counter <= 0;
+                state <= WRITE_WORD_ONE;
               end if;
+            end if;
 
           when WAIT_READ_BIT =>
-              state <= READ_BIT;
+            state <= READ_BIT;
           
           when WRITE_WORD_ONE => 
-              o_en <= '1';
-              o_we <= '1';
-              o_address <= ram_w_pos;
-              o_data <= word1;
-              ram_w_pos <= std_logic_vector(unsigned(ram_w_pos)+1);
-              state <= WAIT_WRITE_WORD_ONE;
+            o_en <= '1';
+            o_we <= '1';
+            o_address <= ram_w_pos;
+            o_data <= word1;
+            ram_w_pos <= std_logic_vector(unsigned(ram_w_pos)+1);
+            state <= WAIT_WRITE_WORD_ONE;
               
           when WAIT_WRITE_WORD_ONE =>
-              state <= WRITE_WORD_TWO;
+            state <= WRITE_WORD_TWO;
           
           when WRITE_WORD_TWO => 
-              o_en <= '1';
-              o_we <= '1';
-              o_address <= ram_w_pos;
-              o_data <= word2;
-              ram_w_pos <= std_logic_vector(unsigned(ram_w_pos)+1);
-              words_processed <= words_processed+1;
-              state <= WAIT_WRITE_WORD_TWO;
+            o_en <= '1';
+            o_we <= '1';
+            o_address <= ram_w_pos;
+            o_data <= word2;
+            ram_w_pos <= std_logic_vector(unsigned(ram_w_pos)+1);
+            words_processed <= words_processed+1;
+            state <= WAIT_WRITE_WORD_TWO;
 
               
           when WAIT_WRITE_WORD_TWO =>
-              state <= PREPARE_BIT_READ;
+            state <= PREPARE_BIT_READ;
               
           when DONE => 
-              if i_start = '0' then
+            if i_start = '0' then
             -- Set the next state.
-                state <= START;
-              else
+              state <= START;
+            else
             -- Set done signal.
-                o_en      <= '0';
-                o_done <= '1';
+              o_en      <= '0';
+              o_done <= '1';
             -- Set the next state.
-                state <= DONE;
-              end if;
+              state <= DONE;
+            end if;
               
         end case;
       end if;
